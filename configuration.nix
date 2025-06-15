@@ -61,8 +61,6 @@
     shell = pkgs.zsh;
   };
 
-  nixpkgs.config.allowUnfree = true;
-
   hardware.nvidia = {
     package = config.boot.kernelPackages.nvidiaPackages.stable;
     modesetting.enable = true;

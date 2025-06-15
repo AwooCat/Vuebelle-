@@ -5,20 +5,28 @@
 
   outputs = { self, nixpkgs }: let
     system = "x86_64-linux";
-    pkgs = nixpkgs.legacyPackages.${system};
+
+    pkgs = import nixpkgs {
+      inherit system;
+      config.allowUnfree = true;
+    };
   in {
     nixosConfigurations.JUCHE = nixpkgs.lib.nixosSystem {
-      inherit system;
+      inherit system pkgs;
+
       modules = [
         ./configuration.nix
 
-        {
+        ({ config, lib, ... }: {
           services.power-profiles-daemon.enable = true;
 
           environment.systemPackages = with pkgs; [
             kdePackages.powerdevil
             power-profiles-daemon
             librewolf
+            lutris
+            steam
+            heroic
           ];
 
           systemd.user.services.set-performance-mode = {
@@ -29,8 +37,8 @@
             };
           };
 
-          boot.kernelModules = [ "amd_pstate" ]; # or "intel_pstate"
-        }
+          boot.kernelModules = [ "amd_pstate" ];
+        })
       ];
     };
   };
