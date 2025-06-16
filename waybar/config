@@ -1,0 +1,13 @@
+{
+  "modules-left": ["cpu", "memory", "temperature"],
+  "cpu": {
+    "format": "{usage}%"
+  },
+  "memory": {
+    "format": "{used}/{total} MB"
+  },
+  "temperature": {
+    "format": "{temperature}°C",
+    "path": "/sys/class/thermal/thermal_zone0/temp"
+  }
+}

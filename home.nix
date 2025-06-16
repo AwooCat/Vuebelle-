@@ -1,5 +1,27 @@
 { config, pkgs, ... }:
 
+let
+  # Waybar config JSON inlined as a string
+  waybarConfig = ''
+    {
+      "layer": "top",
+      "position": "top",
+      "modules-left": ["sway/workspaces", "sway/mode"],
+      "modules-center": ["clock"],
+      "modules-right": ["cpu", "memory", "temperature", "battery", "network"],
+      "cpu": {
+        "format": "{usage}%"
+      },
+      "memory": {
+        "format": "{used}MB / {total}MB"
+      },
+      "temperature": {
+        "format": "{temperature}°C"
+      }
+    }
+  '';
+in
+
 {
   home.username = "ryu";
   home.homeDirectory = "/home/ryu";
@@ -51,7 +73,7 @@
         "waybar"
       ];
 
-      monitor = [ ",preferred,auto,1" ];
+      monitor = [ ",preferred,auto,1,wallpaper=${toString /home/ryu/.config/hypr/wallpapers/1340419.png},wallpaper_mode=fill" ];
 
       env = [
         "XCURSOR_SIZE,24"
@@ -71,4 +93,16 @@
       };
     };
   };
+
+  programs.waybar = {
+    enable = true;
+  };
+
+  # Inline Waybar config as a file in home directory
+  home.file.".config/waybar/config" = {
+    text = waybarConfig;
+  };
+
+  # Disable nixpkgs release check warning (optional)
+  home.enableNixpkgsReleaseCheck = false;
 }
