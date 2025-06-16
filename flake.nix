@@ -1,5 +1,5 @@
 {
-  description = "JUCHE NixOS + Home Manager with Hyprland";
+  description = "Hyprland Gaming NixOS with Home Manager";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
@@ -10,32 +10,31 @@
   outputs = { self, nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
-      username = "ryu";
-
+      hostname = "nixos";   # replace with your hostname if different
+      username = "ryu";     # your username
       pkgs = import nixpkgs {
         inherit system;
-        config.allowUnfree = true;
+        config.allowUnfree = true;  # enable unfree packages here
       };
     in {
-      nixosConfigurations.${username} = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
         inherit system pkgs;
 
         modules = [
           ./configuration.nix
 
-          ({ config, pkgs, ... }: {
-
+          {
             environment.systemPackages = with pkgs; [
               hyprland
               power-profiles-daemon
-              librewolf
-              lutris
-              steam
-              heroic
               kdePackages.powerdevil
+              librewolf
+              steam
+              lutris
+              heroic
             ];
 
-            # Add Hyprland session file for SDDM
+            # Hyprland session file for SDDM
             environment.etc."wayland-sessions/hyprland.desktop".text = ''
               [Desktop Entry]
               Name=Hyprland
@@ -46,7 +45,6 @@
               TryExec=Hyprland
             '';
 
-            # Enable power profiles daemon
             services.power-profiles-daemon.enable = true;
             boot.kernelModules = [ "amd_pstate" ];
 
@@ -56,7 +54,7 @@
               wantedBy = [ "default.target" ];
               serviceConfig.ExecStart = "${pkgs.power-profiles-daemon}/bin/powerprofilesctl set balanced";
             };
-          })
+          }
         ];
       };
 

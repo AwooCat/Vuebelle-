@@ -73,7 +73,7 @@ in
         "waybar"
       ];
 
-      monitor = [ ",preferred,auto,1,wallpaper=${toString /home/ryu/.config/hypr/wallpapers/1340419.png},wallpaper_mode=fill" ];
+      monitor = [ ",preferred,auto,1" ];
 
       env = [
         "XCURSOR_SIZE,24"

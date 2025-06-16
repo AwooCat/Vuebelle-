@@ -1,11 +1,12 @@
 { config, pkgs, ... }:
 
 {
+  imports = [ ./hardware-configuration.nix ];
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  imports = [
-    ./hardware-configuration.nix
-  ];
+  #  Allow unfree packages like Steam
+  
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -19,10 +20,8 @@
   time.timeZone = "Africa/Brazzaville";
   i18n.defaultLocale = "en_GB.UTF-8";
 
-  # Console (TTY) keyboard layout
-  console.keyMap = "sg";  # For Swiss German on console
+  console.keyMap = "sg";
 
-  # X11 keyboard layout (GUI)
   services.xserver.enable = true;
   services.xserver.xkb.layout = "ch";
   services.xserver.xkb.variant = "de";
@@ -35,31 +34,14 @@
   services.pipewire.alsa.enable = true;
   services.pipewire.pulse.enable = true;
 
-  programs.steam.enable = true;
-
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    firefox
-    pciutils
-    steam-run
-    heroic
-    runelite
-    lutris
-    mangohud
-    wine
-    wineWowPackages.staging
-    winetricks
-    fastfetch
-  ];
-
-  programs.zsh.enable = true;
-
   users.users.ryu = {
     isNormalUser = true;
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.zsh;
   };
+
+  programs.zsh.enable = true;
+  programs.steam.enable = true;
 
   hardware.nvidia = {
     package = config.boot.kernelPackages.nvidiaPackages.stable;
@@ -78,7 +60,6 @@
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     GBM_BACKEND = "nvidia-drm";
     LIBVA_DRIVER_NAME = "nvidia";
-    PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION = "python";
   };
 
   system.stateVersion = "25.05";
