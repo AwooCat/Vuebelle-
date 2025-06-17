@@ -1,0 +1,16 @@
+{
+  "layer": "top",
+  "position": "top",
+  "modules-left": ["sway/workspaces", "sway/mode"],
+  "modules-center": ["clock"],
+  "modules-right": ["cpu", "memory", "temperature", "battery", "network"],
+  "cpu": {
+    "format": "{usage}%"
+  },
+  "memory": {
+    "format": "{used}MB / {total}MB"
+  },
+  "temperature": {
+    "format": "{temperature}°C"
+  }
+}

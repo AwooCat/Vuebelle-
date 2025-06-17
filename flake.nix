@@ -34,7 +34,7 @@
               fastfetch
               wofi
               firefox
-              kdePackages.okular  # explicit package here
+              kdePackages.okular
             ];
 
             environment.etc."wayland-sessions/hyprland.desktop".text = ''
