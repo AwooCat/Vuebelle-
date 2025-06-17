@@ -5,8 +5,6 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  # nixpkgs.config.allowUnfree = true;  # REMOVE or comment out this line
-
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -21,17 +19,20 @@
 
   console.keyMap = "sg";
 
-  services.xserver.enable = true;
-  services.xserver.xkb.layout = "ch";
-  services.xserver.xkb.variant = "de";
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.enable = false;
 
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = false;  # disable Plasma6
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;  # Correctly enable SDDM Wayland support
+  };
 
-  services.pipewire.enable = true;
-  services.pipewire.alsa.enable = true;
-  services.pipewire.pulse.enable = true;
+  services.desktopManager.plasma6.enable = false;
+
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
+  };
 
   users.users.ryu = {
     isNormalUser = true;
@@ -50,8 +51,8 @@
     open = false;
     prime = {
       offload.enable = true;
-      amdgpuBusId = "PCI:5:0:0";
-      nvidiaBusId = "PCI:1:0:0";
+      amdgpuBusId = "PCI:5:0:0";   # Your AMD GPU PCI bus ID
+      nvidiaBusId = "PCI:1:0:0";   # Your NVIDIA GPU PCI bus ID
     };
   };
 

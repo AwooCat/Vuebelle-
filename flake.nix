@@ -8,61 +8,50 @@
   };
 
   outputs = { self, nixpkgs, home-manager, ... }:
-    let
-      system = "x86_64-linux";
-      hostname = "nixos";
-      username = "ryu";
-      pkgs = import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      };
-    in {
-      nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
-        inherit system pkgs;
+  let
+    system = "x86_64-linux";
+    hostname = "nixos";
+    username = "ryu";
 
-        modules = [
-          ./configuration.nix
-
-          {
-            environment.systemPackages = with pkgs; [
-              hyprland
-              hyprpaper
-              power-profiles-daemon
-              librewolf
-              steam
-              lutris
-              heroic
-              fastfetch
-              wofi
-              firefox
-              kdePackages.okular
-            ];
-
-            environment.etc."wayland-sessions/hyprland.desktop".text = ''
-              [Desktop Entry]
-              Name=Hyprland
-              Comment=Hyprland Wayland Compositor
-              Exec=Hyprland
-              Type=Application
-              DesktopNames=Hyprland
-              TryExec=Hyprland
-            '';
-
-            services.power-profiles-daemon.enable = true;
-            boot.kernelModules = [ "amd_pstate" ];
-
-            systemd.user.services.set-performance-mode = {
-              description = "Set power profile to balanced";
-              wantedBy = [ "default.target" ];
-              serviceConfig.ExecStart = "${pkgs.power-profiles-daemon}/bin/powerprofilesctl set balanced";
-            };
-          }
-        ];
-      };
-
-      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgs;
-        modules = [ ./home.nix ];
-      };
+    pkgs = import nixpkgs {
+      inherit system;
+      config.allowUnfree = true;
     };
+  in {
+    nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
+      inherit system;
+      pkgs = pkgs;
+
+      modules = [
+        ./configuration.nix
+
+        ({ pkgs, ... }: {
+          programs.hyprland = {
+            enable = true;
+            withUWSM = true;
+            xwayland.enable = true;
+          };
+
+          environment.systemPackages = with pkgs; [
+            hyprland
+            hyprpaper
+            power-profiles-daemon
+            librewolf
+            steam
+            lutris
+            heroic
+            fastfetch
+            wofi
+            firefox
+            kdePackages.okular
+          ];
+        })
+      ];
+    };
+
+    homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
+      modules = [ ./home.nix ];
+    };
+  };
 }

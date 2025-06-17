@@ -80,7 +80,8 @@ in
       ];
 
       input = {
-        kb_layout = "us";
+        kb_layout = "ch";
+        kb_variant = "de";
         follow_mouse = 1;
       };
 
