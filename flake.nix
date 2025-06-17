@@ -12,7 +12,6 @@
       system = "x86_64-linux";
       hostname = "nixos";
       username = "ryu";
-
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
@@ -25,20 +24,17 @@
           ./configuration.nix
 
           {
-            programs.hyprland.enable = true;
-
             environment.systemPackages = with pkgs; [
               hyprland
-              firefox
+              power-profiles-daemon
               librewolf
-              fastfetch
-              wofi
-              kitty
-              waybar
               steam
               lutris
               heroic
-              power-profiles-daemon
+              fastfetch
+              wofi
+              firefox
+              kdePackages.okular  # explicit package here
             ];
 
             environment.etc."wayland-sessions/hyprland.desktop".text = ''
@@ -52,7 +48,6 @@
             '';
 
             services.power-profiles-daemon.enable = true;
-
             boot.kernelModules = [ "amd_pstate" ];
 
             systemd.user.services.set-performance-mode = {
