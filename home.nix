@@ -1,20 +1,35 @@
 { config, pkgs, ... }:
 
 let
-  # Waybar config JSON inlined as a string
   waybarConfig = ''
     {
       "layer": "top",
       "position": "top",
       "modules-left": ["sway/workspaces", "sway/mode"],
       "modules-center": ["clock"],
-      "modules-right": ["cpu", "memory", "temperature", "battery", "network"],
+      "modules-right": ["tray", "network", "cpu", "memory", "temperature", "battery"],
+
+      "tray": {
+        "icon-size": 16,
+        "spacing": 10
+      },
+
+      "network": {
+        "interface": "wlo1",
+        "format-wifi": " {essid} ({signalStrength}%)",
+        "format-ethernet": " {ifname}",
+        "format-disconnected": "⚠ Disconnected",
+        "tooltip": true
+      },
+
       "cpu": {
         "format": "{usage}%"
       },
+
       "memory": {
         "format": "{used}MB / {total}MB"
       },
+
       "temperature": {
         "format": "{temperature}°C"
       }
@@ -41,6 +56,7 @@ in
     papirus-icon-theme
     catppuccin-gtk
     hyprpaper
+    networkmanagerapplet
   ];
 
   home.sessionVariables = {
@@ -71,6 +87,7 @@ in
       exec-once = [
         "hyprpaper"
         "waybar"
+        "nm-applet"
       ];
 
       monitor = [ ",preferred,auto,1" ];
@@ -99,11 +116,9 @@ in
     enable = true;
   };
 
-  # Inline Waybar config as a file in home directory
   home.file.".config/waybar/config" = {
     text = waybarConfig;
   };
 
-  # Disable nixpkgs release check warning (optional)
   home.enableNixpkgsReleaseCheck = false;
 }

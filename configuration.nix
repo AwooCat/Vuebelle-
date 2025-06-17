@@ -15,15 +15,16 @@
   networking.networkmanager.enable = true;
 
   time.timeZone = "Africa/Brazzaville";
+
   i18n.defaultLocale = "en_GB.UTF-8";
 
-  console.keyMap = "sg";
+  console.keyMap = "sg";  # Swiss German for TTY
 
   services.xserver.enable = false;
 
   services.displayManager.sddm = {
     enable = true;
-    wayland.enable = true;  # Correctly enable SDDM Wayland support
+    wayland.enable = true;
   };
 
   services.desktopManager.plasma6.enable = false;
@@ -51,8 +52,8 @@
     open = false;
     prime = {
       offload.enable = true;
-      amdgpuBusId = "PCI:5:0:0";   # Your AMD GPU PCI bus ID
-      nvidiaBusId = "PCI:1:0:0";   # Your NVIDIA GPU PCI bus ID
+      amdgpuBusId = "PCI:5:0:0";
+      nvidiaBusId = "PCI:1:0:0";
     };
   };
 
