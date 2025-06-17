@@ -26,6 +26,7 @@
           {
             environment.systemPackages = with pkgs; [
               hyprland
+              hyprpaper
               power-profiles-daemon
               librewolf
               steam
