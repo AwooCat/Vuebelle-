@@ -5,8 +5,7 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  #  Allow unfree packages like Steam
-  
+  # nixpkgs.config.allowUnfree = true;  # REMOVE or comment out this line
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -28,7 +27,7 @@
   services.xserver.videoDrivers = [ "nvidia" ];
 
   services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
+  services.desktopManager.plasma6.enable = false;  # disable Plasma6
 
   services.pipewire.enable = true;
   services.pipewire.alsa.enable = true;

@@ -10,11 +10,12 @@
   outputs = { self, nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
-      hostname = "nixos";   # replace with your hostname if different
-      username = "ryu";     # your username
+      hostname = "nixos";  # Adjust if your hostname is different
+      username = "ryu";    # Adjust if your user is different
+
       pkgs = import nixpkgs {
         inherit system;
-        config.allowUnfree = true;  # enable unfree packages here
+        config.allowUnfree = true;
       };
     in {
       nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
@@ -24,31 +25,25 @@
           ./configuration.nix
 
           {
+            # Set Hyprland as the default session
+            services.displayManager.defaultSession = "hyprland";
+            services.displayManager.sessionPackages = [ pkgs.hyprland ];
+
+            # Packages
             environment.systemPackages = with pkgs; [
               hyprland
               power-profiles-daemon
-              kdePackages.powerdevil
               librewolf
               steam
               lutris
               heroic
             ];
 
-            # Hyprland session file for SDDM
-            environment.etc."wayland-sessions/hyprland.desktop".text = ''
-              [Desktop Entry]
-              Name=Hyprland
-              Comment=Hyprland Wayland Compositor
-              Exec=Hyprland
-              Type=Application
-              DesktopNames=Hyprland
-              TryExec=Hyprland
-            '';
-
+            # Enable power profile control
             services.power-profiles-daemon.enable = true;
             boot.kernelModules = [ "amd_pstate" ];
 
-            # User service to set balanced power profile on login
+            # Set power mode to balanced on user login
             systemd.user.services.set-performance-mode = {
               description = "Set power profile to balanced";
               wantedBy = [ "default.target" ];
